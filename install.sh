@@ -6,7 +6,7 @@ mkdir ${TMP} && cd ${TMP}
 # install required software
 echo Install requirements ...
 sudo apt-get -y install openmpi-bin openmpi-doc libopenmpi-dev autoconf \
-                        gcc unzip default-gdk git libargtable2-0 libargtable2-dev \
+                        gcc unzip default-jdk git libargtable2-0 libargtable2-dev \
                         python-pip
 
 # install beagle-lib
