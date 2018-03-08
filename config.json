@@ -1,4 +1,0 @@
-{
-  "activemq": "amqp://127.0.0.1/",
-  "database": "mysql://127.0.0.1/cloudtree"
-}
