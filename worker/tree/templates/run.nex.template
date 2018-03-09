@@ -1,0 +1,15 @@
+BEGIN mrbayes;
+        log start filename=run.log;                [log output for analysis to a text file]
+        set autoclose=yes nowarn=yes;              [this is needed to run in batch mode]
+
+[Primates example from manual]
+        execute data.nex;
+        lset nst=6 rates=invgamma;
+        mcmc ngen=20000
+                samplefreq=100
+                printfreq=100
+                diagnfreq=1000
+                filename=run.nex;
+        sump filename=run.nex;
+        sumt filename=run.nex;
+END;
