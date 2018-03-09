@@ -1,0 +1,6 @@
+amqp==2.2.2
+celery==4.1.0
+clustalo==0.1.1
+MySQL-python==1.2.5
+requests==2.18.4
+SQLAlchemy==1.2.5

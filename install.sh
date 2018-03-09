@@ -40,4 +40,4 @@ popd
 
 # install python libs
 echo Installing python libs ...
-pip install idigbio celery sqlalchemy clustalo mysql
+pip install celery sqlalchemy clustalo mysql
