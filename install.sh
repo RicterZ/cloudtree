@@ -40,4 +40,4 @@ popd
 
 # install python libs
 echo Installing python libs ...
-pip install celery sqlalchemy clustalo mysql
+pip install -r requirements.txt
