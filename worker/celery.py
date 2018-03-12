@@ -6,5 +6,3 @@ app = Celery('cloud_tree',
              broker=BROKER,
              backend=BACKEND,
              include=['worker.tree.tasks', 'worker.align.tasks'])
-
-# app.autodiscover_tasks(['tree', 'align'])
