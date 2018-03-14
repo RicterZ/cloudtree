@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block footer %}
+<script>
+document.getElementById("uploadBtn").onchange = function () {
+    document.getElementById("uploadFile").value = this.files[0].name;
+};
+</script>
+{% endblock %}
+
+{% block body %}
+<div>
+    <h3>Upload FASTA Format File</h3>
+    <form action="#">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
+            <input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFile" readonly/>
+            <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+                <i class="material-icons">attach_file</i><input type="file" id="uploadBtn">
+            </div>
+        </div>
+        <button class="mdl-button mdl-js-button  mdl-button--raised  mdl-button--colored">Upload</button>
+    </form>
+</div>
+{% endblock %}

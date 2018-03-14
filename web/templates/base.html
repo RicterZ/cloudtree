@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CloudTree</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/static/mdl/material.min.css">
+    <script src="/static/mdl/material.min.js"></script>
+    <style>
+        .avatar {
+            width: 50%;
+            border-radius: 100%;
+            text-align: center;
+            margin: 30px auto 10px;
+            overflow: hidden;
+        }
+        .avatar > img {
+            width: 100%;
+        }
+
+        .username {
+            text-align: center;
+            font-weight: 500;
+            font-size: 18px;
+        }
+
+        nav#sidebar > a {
+            font-weight: bold;
+            color: #c3c3c3;
+            font-size: 15px;
+        }
+
+        .material-icons {
+            margin-right: 32px;
+        }
+
+
+        .mdl-button--file input {
+  cursor: pointer;
+  height: 100%;
+  right: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 300px;
+  z-index: 4;
+}
+
+.mdl-textfield--file .mdl-textfield__input {
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+}
+.mdl-textfield--file .mdl-button--file {
+  right: 0;
+}
+
+        .container {
+            padding: 20px;
+        }
+
+    </style>
+
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+    <header class="mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">{{ title }}</span>
+            <div class="mdl-layout-spacer"></div>
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+                <i class="material-icons">more_vert</i>
+            </button>
+            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+                <li class="mdl-menu__item">Logout</li>
+            </ul>
+        </div>
+    </header>
+
+    <div class="mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+        <header>
+            <div class="avatar"><img src="/static/images/user.png" class="demo-avatar"></div>
+            <div>
+                <p class="username">Hello, {% if user %}{{ user }}{% endif %}</p>
+                <div class="mdl-layout-spacer"></div>
+            </div>
+        </header>
+
+        <nav class="mdl-navigation mdl-color--blue-grey-800" id="sidebar">
+            <a class="mdl-navigation__link" href="/"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Dashboard</a>
+            <a class="mdl-navigation__link" href="/upload"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">cloud_upload</i>Upload</a>
+            <a class="mdl-navigation__link" href="/create"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">launch</i>Create Task</a>
+        </nav>
+    </div>
+
+    <main class="mdl-layout__content mdl-color--grey-100">
+        <div class="mdl-grid">
+            <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid container">
+                {% block body %}
+                {% endblock %}
+            </div>
+            <div class="mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+
+{% block footer %}
+{% endblock %}
+</html>

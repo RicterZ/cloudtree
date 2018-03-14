@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block body %}
+    {% if user %}
+        <div>
+            <h3>Recent Jobs</h3>
+            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Job ID</th>
+                    <th class="mdl-data-table__cell--non-numeric">Job Name</th>
+                    <th class="mdl-data-table__cell--non-numeric">Status</th>
+                    <th class="mdl-data-table__cell--non-numeric">Create Time</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric">{{ job.job_id }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ job.job_meta }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ job.status }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ job.create_time | ctime }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    {% endif %}
+{% endblock %}

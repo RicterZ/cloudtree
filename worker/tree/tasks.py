@@ -16,7 +16,7 @@ def ping():
 
 
 @app.task
-def tree(job_id, seqs, seq_type='dna'):
+def tree(seqs, seq_type='dna'):
     start_at = int(time.time())
     with open(os.path.join(os.path.dirname(__file__), 'templates/run.nex.template')) as f:
         run_file_content = f.read()
@@ -54,7 +54,7 @@ def tree(job_id, seqs, seq_type='dna'):
     with open('{0}.con.tre'.format(run_file_path), 'r') as f:
         result = f.read()
 
-    save_result(job_id, result, start_at)
+    save_result(tree.request.id, result, start_at)
     return ret
 
 

@@ -1,7 +1,9 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from hashlib import sha1
+from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker, Session
 from sqlalchemy import create_engine
+from sqlalchemy.orm.exc import NoResultFound
 
 from worker.config import BACKEND
 
@@ -12,9 +14,16 @@ Base = declarative_base()
 metadata = Base.metadata
 
 
+class CeleryTask(Base):
+    __tablename__ = 'celery_taskmeta'
+    id = Column(Integer, primary_key=True)
+    task_id = Column(String(64))
+    status = Column(String(20))
+
+
 class Result(Base):
     __tablename__ = 'results'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     job_id = Column(String(64), unique=True)
     job_type = Column(String(10))
     result = Column(Text)
@@ -22,11 +31,37 @@ class Result(Base):
     end_time = Column(Integer)
 
 
-class Sequence(Base):
-    __tablename__ = 'sequences'
-    id = Column(Integer, primary_key=True)
-    seq_name = Column(Text)
-    seq = Column(Text)
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(20))
+    password = Column(String(40))
+
+    def check(cls, password):
+        return cls.password == sha1(password).hexdigest()
+
+
+class UserJob(Base):
+    __tablename__ = 'users_jobs'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    job_id = Column(String(64))
+    user_id = Column(Integer)
+    create_time = Column(Integer)
+    job_type = Column(String(10))
+    job_meta = Column(Text)
+
+    @property
+    def status(cls):
+        if cls.job_type == 'upload':
+            return 'SUCCESS'
+
+        session = Session.object_session(cls)
+        try:
+            obj = session.query(CeleryTask).filter(CeleryTask.task_id == cls.job_id).one()
+        except NoResultFound:
+            return 'RUNNING'
+
+        return obj.status
 
 
 db = scoped_session(sessionmaker(bind=engine))

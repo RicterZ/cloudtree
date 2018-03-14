@@ -1,4 +1,4 @@
 *.pyc
 .idea
 config.py
-upload/*.fasta
+web/upload/*.fasta

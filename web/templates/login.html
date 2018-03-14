@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <form method="post" action="/login/" enctype="multipart/form-data">
+        <input type="text" placeholder="Username" name="username">
+        <input type="password" placeholder="Password" name="password">
+        <input type="submit">
+    </form>
+{% endblock %}
