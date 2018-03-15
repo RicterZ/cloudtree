@@ -14,19 +14,21 @@ def main():
     tornado.options.parse_command_line()
     application = tornado.web.Application([
         # api
-        (r'/api/align/([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})', api.AlignHandler),
-        (r'/api/tree/([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})', api.TreeHandler),
-        (r'/api/tree/', api.CreateTreeHandler),      # return task id
-        (r'/api/align/', api.CreateAlignHandler),    # return task id
+        (r'/api/view/([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})', api.ResultViewHandler),
+        (r'/api/tree/?', api.CreateTreeHandler),      # return task id
+        (r'/api/align/?', api.CreateAlignHandler),    # return task id
+        (r'/api/pipeline/?', api.PipelineHandler),    # return task id
 
         # index
         (r'/', index.IndexHandler),
         (r'/upload/?', index.UploadFastAHandler),     # return upload file path
-        (r'/login/?', index.LoginHandler),     # return upload file path
+        (r'/create/?', index.CreateTaskHandler),      # return task id
+        (r'/login/?', index.LoginHandler),
+        (r'/logout/?', index.LogoutHandler),
 
         # static
         (r'/upload/(.*)', tornado.web.StaticFileHandler,
-         {'path': os.path.join(os.path.dirname(__file__), '../upload/')})
+         {'path': os.path.join(os.path.dirname(__file__), 'upload/')})
 
     ], debug=True,
         static_path=os.path.join(os.path.dirname(__file__), 'static'),

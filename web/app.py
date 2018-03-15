@@ -7,7 +7,7 @@ from sqlalchemy.ext.declarative import DeclarativeMeta
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import and_
 
-from lib.database import Result, engine
+from lib.database import CeleryTask, engine, UserJob
 
 
 def now():
@@ -68,7 +68,8 @@ class BaseHandler(tornado.web.RequestHandler, JinjaTemplateMixin):
         super(BaseHandler, self).__init__(application, request, **kwargs)
 
     def query(self, type_, uuid):
-        result = self.db.query(Result).filter(and_(Result.job_type == type_, Result.job_id == uuid)).all()
+        result = self.db.query(UserJob).filter(and_(UserJob.job_id == uuid,
+                                                    UserJob.job_type == type_)).all()
         if not result:
             return None
         else:

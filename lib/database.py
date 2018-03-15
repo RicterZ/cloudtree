@@ -19,16 +19,8 @@ class CeleryTask(Base):
     id = Column(Integer, primary_key=True)
     task_id = Column(String(64))
     status = Column(String(20))
-
-
-class Result(Base):
-    __tablename__ = 'results'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    job_id = Column(String(64), unique=True)
-    job_type = Column(String(10))
     result = Column(Text)
-    start_time = Column(Integer)
-    end_time = Column(Integer)
+    date_done = Column(String(20))
 
 
 class User(Base):

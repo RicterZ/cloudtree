@@ -15,9 +15,15 @@ class IndexHandler(BaseHandler):
         if self.current_user:
             jobs = self.db.query(UserJob).filter(and_(UserJob.user_id == self.current_user['id'],
                                                       UserJob.job_type != 'upload'))\
-                .order_by(desc(UserJob.create_time))
+                .order_by(desc(UserJob.create_time)).limit(5).all()
 
         self.render('index.html', jobs=jobs, title='Dashboard')
+
+
+class LogoutHandler(BaseHandler):
+    def get(self):
+        self.clear_all_cookies()
+        return self.redirect('/')
 
 
 class LoginHandler(BaseHandler):
@@ -49,7 +55,10 @@ class UploadFastAHandler(BaseHandler):
     """
     @tornado.web.authenticated
     def get(self):
-        self.render('upload.html')
+        uploads = self.db.query(UserJob).filter(and_(UserJob.user_id == self.current_user['id'],
+                                                     UserJob.job_type == 'upload'))\
+            .order_by(desc(UserJob.create_time)).limit(10).all()
+        self.render('upload.html', uploads=uploads, title='Upload')
 
     @tornado.web.authenticated
     def post(self):
@@ -74,3 +83,15 @@ class UploadFastAHandler(BaseHandler):
         self.db.commit()
 
         return self.return_json(data='upload/{0}.fasta'.format(upload_filename))
+
+
+class CreateTaskHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        uploads = self.db.query(UserJob).filter(and_(UserJob.user_id == self.current_user['id'],
+                                                     UserJob.job_type == 'upload')) \
+            .order_by(desc(UserJob.create_time)).limit(5).all()
+        jobs = self.db.query(UserJob).filter(and_(UserJob.user_id == self.current_user['id'],
+                                                  UserJob.job_type != 'upload')) \
+            .order_by(desc(UserJob.create_time)).limit(10).all()
+        self.render('tasks.html', uploads=uploads, jobs=jobs, title='Tasks')

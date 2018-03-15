@@ -3,6 +3,5 @@ from celery import Celery
 from worker.config import BACKEND, BROKER
 
 app = Celery('cloud_tree',
-             broker=BROKER,
-             backend=BACKEND,
-             include=['worker.tree.tasks', 'worker.align.tasks'])
+             include=['worker.tree.tasks', 'worker.align.tasks', 'worker'])
+app.config_from_object('worker.celeryconfig')
