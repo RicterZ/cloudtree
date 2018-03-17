@@ -102,3 +102,7 @@ class ClusterHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
         self.render('cluster.html', title='Cluster')
+
+    @tornado.web.authenticated
+    def post(self):
+        pass
