@@ -3,6 +3,7 @@ import json
 import tornado.web
 from celery.result import AsyncResult
 from worker.celery import app
+from ete2 import PhyloTree
 
 from lib.database import UserJob, CeleryTask
 from web.app import BaseHandler, now

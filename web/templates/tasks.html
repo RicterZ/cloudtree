@@ -34,7 +34,7 @@
                 url: "/api/view/" + id,
                 dataType: 'json',
                 success: function (res) {
-
+                    showtree(res['data']);
                 }
             });
             dialog.showModal();
@@ -43,7 +43,195 @@
     dialog.querySelector('.close').addEventListener('click', function() {
         dialog.close();
     });
+
+    // http://stackoverflow.com/questions/498970/how-do-i-trim-a-string-in-javascript
+    if (!String.prototype.trim)
+    {
+        String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
+    }
+
+    function showtree(text)
+    {
+        var t = new Tree();
+        text = text.trim();
+
+        var nexus = parse_nexus(text);
+
+        if (nexus.status != NexusError.ok)
+        {
+            document.getElementById('message').innerHTML='Error parsing NEXUS';
+        }
+        else
+        {
+            if (nexus.treesblock.trees.length == 0)
+            {
+                document.getElementById('message').innerHTML='No trees';
+            }
+            else
+            {
+                newick = nexus.treesblock.trees[0].newick;
+
+                t.Parse(newick);
+
+                if (t.error != 0)
+                {
+                    document.getElementById('message').innerHTML='Error parsing tree';
+                }
+                else
+                {
+                    document.getElementById('message').innerHTML='Parsed OK (use mouse to zoom and pan)';
+
+                    //t.WriteNewick();
+
+                    t.ComputeWeights(t.root);
+
+                    var td = null;
+
+                    // var selectmenu = document.getElementById('style');
+                    var drawing_type = 'rectanglecladogram';
+
+                    switch (drawing_type)
+                    {
+                        case 'rectanglecladogram':
+                            td = new RectangleTreeDrawer();
+                            break;
+
+                        case 'phylogram':
+                            if (t.has_edge_lengths)
+                            {
+                                td = new PhylogramTreeDrawer();
+                            }
+                            else
+                            {
+                                td = new RectangleTreeDrawer();
+                            }
+                            break;
+
+                        case 'circle':
+                            td = new CircleTreeDrawer();
+                            break;
+
+                        case 'circlephylogram':
+                            if (t.has_edge_lengths)
+                            {
+                                td = new CirclePhylogramDrawer();
+                            }
+                            else
+                            {
+                                td = new CircleTreeDrawer();
+                            }
+                            break;
+
+                        case 'cladogram':
+                        default:
+                            td = new TreeDrawer();
+                            break;
+                    }
+
+                    // clear existing diagram, if any
+                    var svg = document.getElementById('svg');
+                    while (svg.hasChildNodes())
+                    {
+                        svg.removeChild(svg.lastChild);
+                    }
+
+
+
+
+                    var g = document.createElementNS('http://www.w3.org/2000/svg','g');
+                    g.setAttribute('id','viewport');
+                    svg.appendChild(g);
+
+
+                    td.Init(t, {svg_id: 'viewport', width:500, height:500, fontHeight:10, root_length:0.1} );
+
+                    td.CalcCoordinates();
+                    td.Draw();
+
+                    // font size
+                    var cssStyle = document.createElementNS('http://www.w3.org/2000/svg','style');
+                    cssStyle.setAttribute('type','text/css');
+
+                    var font_size = Math.floor(td.settings.height/t.num_leaves);
+
+                    var style=document.createTextNode("text{font-size:" + font_size + "px;}");
+                    cssStyle.appendChild(style);
+
+                    svg.appendChild(cssStyle);
+
+
+                    // label leaves...
+
+                    var n = new NodeIterator(t.root);
+                    var q = n.Begin();
+                    while (q != null)
+                    {
+                        if (q.IsLeaf())
+                        {
+                            var label = q.label;
+
+                            if (nexus.treesblock.translate)
+                            {
+                                if (nexus.treesblock.translate[label])
+                                {
+                                    label = nexus.treesblock.translate[label];
+                                }
+                            }
+
+                            switch (drawing_type)
+                            {
+                                case 'circle':
+                                case 'circlephylogram':
+                                    var align = 'left';
+                                    var angle = q.angle * 180.0/Math.PI;
+                                    if ((q.angle > Math.PI/2.0) && (q.angle < 1.5 * Math.PI))
+                                    {
+                                        align = 'right';
+                                        angle += 180.0;
+                                    }
+                                    drawRotatedText('viewport', q.xy, label, angle, align)
+                                    break;
+
+                                case 'cladogram':
+                                case 'rectanglecladogram':
+                                case 'phylogram':
+                                default:
+                                    drawText('viewport', q.xy, label);
+                                    break;
+                            }
+                        }
+                        q = n.Next();
+                    }
+
+                    // Scale to fit window
+                    var bbox = svg.getBBox();
+
+                    var scale = Math.min(td.settings.width/bbox.width, td.settings.height/bbox.height);
+
+
+                    // move drawing to centre of viewport
+                    var viewport = document.getElementById('viewport');
+                    viewport.setAttribute('transform', 'scale(' + scale + ')');
+
+                    // centre
+                    bbox = svg.getBBox();
+                    if (bbox.x < 0)
+                    {
+                        viewport.setAttribute('transform', 'translate(' + -bbox.x + ' ' + -bbox.y + ')');
+                    }
+
+
+                    // pan
+                    $('svg').svgPan('viewport');
+                }
+            }
+        }
+    }
+
 </script>
+<script src="/static/js/nexus.js"></script>
+<script src="/static/js/treelib.js"></script>
+<script src="/static/js/jquery-svgpan.js"></script>
 
 {% endblock %}
 
@@ -110,9 +298,16 @@
 
 </div>
 
-<dialog class="mdl-dialog">
+<dialog class="mdl-dialog" style="width: 650px;">
     <h4 class="mdl-dialog__title">Result View</h4>
     <div class="mdl-dialog__content" id="show-result">
+        <div><span id="message"></span></div>
+        <div>
+        <svg id="svg" xmlns="http://www.w3.org/2000/svg" version="1.1" height="400" width="600" style="z-index: 999">
+            <g id="viewport">
+            </g>
+        </svg>
+        </div>
     </div>
     <div class="mdl-dialog__actions">
         <button type="button" class="mdl-button close">Close</button>
