@@ -23,24 +23,15 @@
 </style>
 
 <script>
-    document.getElementById("uploadBtn").onchange = function () {
-        document.getElementById("uploadFile").value = this.files[0].name;
-    };
-
     $("#upload").click(function () {
         $.ajax({
-            url: '/upload/',
+            url: '/cluster/',
             type: 'POST',
-            cache: false,
-            data: new FormData($('#uploadForm')[0]),
-            processData: false,
-            contentType: false,
+            data: new FormData($('#ssh')[0]),
             dataType: 'json'
         }).done(function (res) {
             if (res['error'] == undefined)  {
-                var d = new Date();
-                var now = d.getFullYear() + "-" + (('0' + (d.getMonth()+1)).slice(-2)) + "-" + (('0' + (d.getDate())).slice(-2)) + " " + ('0' + d.getHours()).slice(-2) + ":" + ('0' + d.getMinutes()).slice(-2) + ":" + ('0' + d.getSeconds()).slice(-2);
-                $("#upload-tr").prepend('<tr><td class="mdl-data-table__cell--non-numeric"><a class="file-link" href="' + res['data'] + '">' + res['data'] + '</a></td><td class="mdl-data-table__cell--non-numeric">' + now + '</td></tr');
+                $("#upload-tr").prepend('<tr><td class="mdl-data-table__cell--non-numeric">' + res['data']['ip'] + '</td><td class="mdl-data-table__cell--non-numeric"">' + res['data']['status'] + '</td></tr>');
             } else {
                 alert(res['error']);
             }
@@ -53,12 +44,12 @@
 
 {% block body %}
 <div class="mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col" style="padding: 0;">
-    <div class="bar"><span>Uploaded Files</span></div>
+    <div class="bar"><span>Server List</span></div>
     <table class="mdl-data-table mdl-js-data-table file-upload-table width-100">
         <thead>
         <tr>
-            <th class="mdl-data-table__cell--non-numeric">Filename</th>
-            <th class="mdl-data-table__cell--non-numeric">Uploaded Time</th>
+            <th class="mdl-data-table__cell--non-numeric">IP Address</th>
+            <th class="mdl-data-table__cell--non-numeric">Status</th>
         </tr>
         </thead>
 
@@ -79,22 +70,31 @@
 <div id="upload-container" class="mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
     <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
         <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text">Upload FASTA</h2>
+            <h2 class="mdl-card__title-text">Install CloudTree</h2>
         </div>
         <div class="mdl-card__supporting-text">
-
-            <form action=""  enctype="multipart/form-data" id="uploadForm">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
-                    <input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFile" />
-                    <div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
-                        <i class="material-icons">attach_file</i><input type="file" name="file" id="uploadBtn">
-                    </div>
+            <form action=""  enctype="multipart/form-data" id="ssh">
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" name="user" id="sample3">
+                    <label class="mdl-textfield__label" for="sample3">IP Address...</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" name="user" id="sample4">
+                    <label class="mdl-textfield__label" for="sample4">Port...</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" name="user" id="sample1">
+                    <label class="mdl-textfield__label" for="sample1">Username...</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="password" name="pass" id="sample2">
+                    <label class="mdl-textfield__label" for="sample2">Password...</label>
                 </div>
             </form>
-            Select a FASTA format file and upload, then you can use this file to perform gene align and build tree.
+            Input server ip address, port number, ssh username and password to make your server join cloudtree cluster
         </div>
         <div class="mdl-card__actions mdl-card--border">
-            <button type="submit" id="upload" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Upload</button>
+            <button type="submit" id="upload" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Install CloudTree</button>
         </div>
     </div>
     <div class="demo-separator mdl-cell--1-col"></div>

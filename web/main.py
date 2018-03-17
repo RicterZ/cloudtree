@@ -25,6 +25,7 @@ def main():
         (r'/create/?', index.CreateTaskHandler),      # return task id
         (r'/login/?', index.LoginHandler),
         (r'/logout/?', index.LogoutHandler),
+        (r'/cluster/?', index.ClusterHandler),
 
         # static
         (r'/upload/(.*)', tornado.web.StaticFileHandler,

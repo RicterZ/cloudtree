@@ -96,3 +96,9 @@ class CreateTaskHandler(BaseHandler):
                                                   UserJob.job_type != 'upload')) \
             .order_by(desc(UserJob.create_time)).limit(10).all()
         self.render('tasks.html', uploads=uploads, jobs=jobs, title='Tasks')
+
+
+class ClusterHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        self.render('cluster.html', title='Cluster')
