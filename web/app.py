@@ -79,7 +79,11 @@ class BaseHandler(tornado.web.RequestHandler, JinjaTemplateMixin):
         pass
 
     def render(self, template_name, **kwargs):
-        self.write(self._render(template_name, user=self.current_user['username'], **kwargs))
+        if self.current_user is None:
+            user = None
+        else:
+            user = self.current_user['username']
+        self.write(self._render(template_name, user=user, **kwargs))
 
     def return_json(self, status=200, **kwargs):
         self.set_status(status)

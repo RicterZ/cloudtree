@@ -28,7 +28,7 @@ class LogoutHandler(BaseHandler):
 
 class LoginHandler(BaseHandler):
     def get(self):
-        self.render('login.html')
+        self.render('base.html')
 
     def post(self):
         username = self.get_argument('username', None)
@@ -39,6 +39,7 @@ class LoginHandler(BaseHandler):
                 user = self.db.query(User).filter(User.username == username).one()
             except NoResultFound:
                 return self.redirect('/login')
+
             if user.check(password):
                 self.set_secure_cookie('user', user.username)
                 self.set_secure_cookie('id', str(user.id))

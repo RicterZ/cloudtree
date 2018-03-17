@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="/static/mdl/material.min.css">
     <style>
+
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 30px #f3f3f3 inset;
+        }
+
         .avatar {
             width: 50%;
             border-radius: 100%;
@@ -89,11 +94,15 @@
 
     </style>
 
+    {% if not user %}
+    <link rel="stylesheet" href="/static/css/styles.css">
+    {% endif %}
     {% block head %}
     {% endblock %}
 </head>
 
 <body>
+{% if user %}
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
     <header class="mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
         <div class="mdl-layout__header-row">
@@ -103,7 +112,7 @@
                 <i class="material-icons">more_vert</i>
             </button>
             <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-                <li class="mdl-menu__item">Logout</li>
+                <li><a href="/logout"  class="mdl-menu__item" style="text-decoration: none; color: #000">Logout</a></li>
             </ul>
         </div>
     </header>
@@ -112,7 +121,7 @@
         <header>
             <div class="avatar"><img src="/static/images/user.png" class="demo-avatar"></div>
             <div>
-                <p class="username">Hello, {% if user %}{{ user }}{% endif %}</p>
+                <p class="username">Hello, {% if user %}{{ user }}{% else %}Guest{% endif %}</p>
                 <div class="mdl-layout-spacer"></div>
             </div>
         </header>
@@ -133,6 +142,54 @@
         </div>
     </main>
 </div>
+{% else %}
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+    <div class="android-header mdl-layout__header mdl-layout__header--waterfall">
+        <div class="mdl-layout__header-row" style="padding: 0 40px 0 40px">
+          <span class="android-title mdl-layout-title" style="color: #000; font-weight: bold; color: #08c220; font-size: 30px;">
+              CloudTree
+          </span>
+            <div class="android-header-spacer mdl-layout-spacer"></div>
+            <div class="android-navigation-container">
+                <nav class="android-navigation mdl-navigation">
+                    <a class="mdl-navigation__link mdl-typography--text-uppercase" href="/login">Login</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="android-content mdl-layout__content" style="background: #f3f3f3;">
+        <a name="top"></a>
+        <div class="android-be-together-section mdl-typography--text-center">
+            <div class="logo-font android-slogan">The fast way to build phylogenetic tree </div>
+            <div class="logo-font android-sub-slogan">上传 FASTA 文件，便可等待结果</div>
+            <div style="margin: 150px 0 0 0">
+                <form method="post" action="/login/" enctype="application/x-www-form-urlencoded">
+                    <div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="text" name="username" id="sample3">
+                            <label class="mdl-textfield__label" for="sample3">Username</label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input class="mdl-textfield__input" type="password" name="password" id="sample4">
+                            <label class="mdl-textfield__label" for="sample4">Password</label>
+                        </div>
+                    </div>
+                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect" type="submit">
+                        <i class="material-icons">arrow_forward</i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block login %}
+{% endblock %}
+{% endif %}
 </body>
 
 <script src="/static/mdl/material.min.js"></script>
