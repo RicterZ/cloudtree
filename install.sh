@@ -4,6 +4,8 @@ TMP=/tmp/cloudtree
 mkdir ${TMP}
 cd ${TMP}
 
+# clone project
+
 # install required software
 echo Install requirements ...
 sudo apt-get -y install openmpi-bin openmpi-doc libopenmpi-dev autoconf \
@@ -26,15 +28,6 @@ wget https://svwh.dl.sourceforge.net/project/mrbayes/mrbayes/3.2.5/mrbayes-3.2.5
 tar xvzf mrbayes-3.2.5.tar.gz
 pushd mrbayes_3.2.5/src/
 ./configure --with-beagle --enable-mpi=yes
-make && make install
-popd
-
-# install clustal omega
-echo Install Clustal Omega
-wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz
-tar xvzf clustal-omega-1.2.4
-pushd clustal-omega-1.2.4
-./configure --with-pic --with-openmp
 make && make install
 popd
 
