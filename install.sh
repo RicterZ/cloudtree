@@ -5,8 +5,9 @@ cd ${WORKDIR}
 
 # install required software
 echo Install requirements ...
-sudo apt-get -y install gcc unzip default-jdk git  \
-                        python-pip libmysqld-dev mrbayes
+apt-get -y update
+apt-get -y install gcc unzip default-jdk git  \
+                   python-pip libmysqld-dev mrbayes
 
 # clone project
 git clone https://github.com/RicterZ/cloudtree

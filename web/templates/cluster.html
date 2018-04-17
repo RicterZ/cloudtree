@@ -74,7 +74,7 @@
         {% for s in cluster %}
         <tr class="cluster-tr">
             <td class="mdl-data-table__cell--non-numeric" data-id="{{ s.instance_id }}">{{ s.instance_id }}</td>
-            <td class="mdl-data-table__cell--non-numeric">{{ s.ip }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ s.wan_ip }}</td>
             <td class="mdl-data-table__cell--non-numeric">{{ status_dict[s.status] }}</td>
         </tr>
         {% endfor %}

@@ -21,6 +21,7 @@ CONFIG = {
 CVM_STATUS_CREATING = 3
 CVM_STATUS_NORMAL = 2
 CVM_STATUS_DESTROYING = 6
+CLOUDTREE_INSTALL_SCRIPT = 'https://raw.githubusercontent.com/RicterZ/cloudtree/master/install.sh'
 
 
 @app.task
@@ -101,7 +102,7 @@ def create_cvm(count=1):
                 client = paramiko.SSHClient()
                 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
                 client.connect(cvm_info['wan_ip'], 22, 'ubuntu', TENCENT_CLOUD_LOGIN_PASSWORD)
-                _, stdout, stderr = client.exec_command('sudo id')
+                _, stdout, stderr = client.exec_command('curl -s %s | sudo bash' % CLOUDTREE_INSTALL_SCRIPT)
             except Exception as e:
                 print(e)
     else:
