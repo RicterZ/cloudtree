@@ -3,7 +3,6 @@ import json
 import tornado.web
 from celery.result import AsyncResult
 from worker.celery import app
-from ete2 import PhyloTree
 
 from lib.database import UserJob, CeleryTask
 from web.app import BaseHandler, now
@@ -11,6 +10,7 @@ from lib.utils import parse_fasta
 from worker import pipeline as task_pipeline
 from worker.tree.tasks import tree as task_tree
 from worker.align.tasks import align as task_align
+from worker.cluster.tasks import create_cvm, destroy_cvm
 
 
 class ResultViewHandler(BaseHandler):
@@ -101,3 +101,17 @@ class PipelineHandler(BaseHandler):
             self.db.commit()
 
             return self.return_json(data=str(task))
+
+
+class ClusterHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        count = self.get_argument('count')
+        create_cvm.delay(count)
+        return self.return_json(data={})
+
+    @tornado.web.authenticated
+    def delete(self):
+        ids = tornado.escape.json_decode(self.request.body)
+        destroy_cvm(ids)
+        return self.return_json(data={})

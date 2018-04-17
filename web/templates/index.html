@@ -1,39 +1,60 @@
 {% extends "base.html" %}
 
 {% block body %}
-        <div class="mdl-cell mdl-cell--12-col mdl-grid" style="padding: 0;">
-            <div class="bar"><span>Recent Jobs</span></div>
-            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp width-100" style="padding: 8px;">
-                <thead>
-                <tr>
-                    <th class="mdl-data-table__cell--non-numeric">Job ID</th>
-                    <th class="mdl-data-table__cell--non-numeric">Job Name</th>
-                    <th class="mdl-data-table__cell--non-numeric">Status</th>
-                    <th class="mdl-data-table__cell--non-numeric">Create Time</th>
-                </tr>
-                </thead>
+<div class="mdl-cell mdl-cell--12-col mdl-grid" style="padding: 0;">
+    <div class="bar"><span>Recent Jobs</span></div>
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp width-100" style="padding: 8px;">
+        <thead>
+        <tr>
+            <th class="mdl-data-table__cell--non-numeric">Job ID</th>
+            <th class="mdl-data-table__cell--non-numeric">Job Name</th>
+            <th class="mdl-data-table__cell--non-numeric">Status</th>
+            <th class="mdl-data-table__cell--non-numeric">Create Time</th>
+        </tr>
+        </thead>
 
-                <tbody>
-                {% if jobs %}
-                {% for job in jobs %}
-                <tr>
-                    <td class="mdl-data-table__cell--non-numeric">{{ job.job_id }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ job.job_meta }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ job.status }}</td>
-                    <td class="mdl-data-table__cell--non-numeric">{{ job.create_time | ctime }}</td>
-                </tr>
-                {% endfor %}
-                {% else %}
-                    <tr><td class="mdl-data-table__cell--non-numeric">No Data</td><td></td><td></td><td></td></tr>
-                {% endif %}
-                </tbody>
-            </table>
+        <tbody>
+        {% if jobs %}
+        {% for job in jobs %}
+        <tr>
+            <td class="mdl-data-table__cell--non-numeric">{{ job.job_id }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ job.job_meta }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ job.status }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ job.create_time | ctime }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr><td class="mdl-data-table__cell--non-numeric">No Data</td><td></td><td></td><td></td></tr>
+        {% endif %}
+        </tbody>
+    </table>
 
-        </div>
+</div>
 
-        <div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col" style="padding: 16px 32px;">
-            <svg fill="currentColor" viewBox="0 0 500 250" class="demo-graph">
-              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chart"></use>
-            </svg>
-        </div>
+<div class="mdl-cell mdl-cell--8-col mdl-grid" style="padding: 0;">
+    <div class="bar"><span>Cluster Status</span></div>
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp width-100" style="padding: 0;">
+        <thead>
+        <tr>
+            <th class="mdl-data-table__cell--non-numeric">Instance ID</th>
+            <th class="mdl-data-table__cell--non-numeric">IP Address</th>
+            <th class="mdl-data-table__cell--non-numeric">Status</th>
+        </tr>
+        </thead>
+
+        <tbody id="upload-tr">
+        {% if cluster %}
+        {% for s in cluster %}
+        <tr class="cluster-tr">
+            <td class="mdl-data-table__cell--non-numeric" data-id="{{ s.instance_id }}">{{ s.instance_id }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ s.ip }}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{ status_dict[s.status] }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr id="no-data"><td class="mdl-data-table__cell--non-numeric">No Data</td><td></td><td></td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

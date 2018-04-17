@@ -7,6 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from web.app import BaseHandler, now
 from lib.database import User, UserJob
+from worker.cluster.tasks import CVM_STATUS_CREATING, CVM_STATUS_DESTROYING, CVM_STATUS_NORMAL, list_cvm
 
 
 class IndexHandler(BaseHandler):
@@ -101,8 +102,10 @@ class CreateTaskHandler(BaseHandler):
 class ClusterHandler(BaseHandler):
     @tornado.web.authenticated
     def get(self):
-        self.render('cluster.html', title='Cluster')
-
-    @tornado.web.authenticated
-    def post(self):
-        pass
+        status_dict = {
+            CVM_STATUS_DESTROYING: 'Destroying',
+            CVM_STATUS_NORMAL: 'Working',
+            CVM_STATUS_CREATING: 'Creating',
+        }
+        cluster = list_cvm()
+        self.render('cluster.html', title='Cluster', cluster=cluster, status_dict=status_dict)

@@ -3,5 +3,5 @@ from celery import Celery
 from worker.config import BACKEND, BROKER
 
 app = Celery('cloud_tree',
-             include=['worker.tree.tasks', 'worker.align.tasks', 'worker'])
+             include=['worker.tree.tasks', 'worker.align.tasks', 'worker.cluster.tasks', 'worker'])
 app.config_from_object('worker.celeryconfig')

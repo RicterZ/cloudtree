@@ -18,6 +18,7 @@ def main():
         (r'/api/tree/?', api.CreateTreeHandler),      # return task id
         (r'/api/align/?', api.CreateAlignHandler),    # return task id
         (r'/api/pipeline/?', api.PipelineHandler),    # return task id
+        (r'/api/cluster/?', api.ClusterHandler),
 
         # index
         (r'/', index.IndexHandler),
