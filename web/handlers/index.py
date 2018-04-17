@@ -12,13 +12,19 @@ from worker.cluster.tasks import CVM_STATUS_CREATING, CVM_STATUS_DESTROYING, CVM
 
 class IndexHandler(BaseHandler):
     def get(self):
+        status_dict = {
+            CVM_STATUS_DESTROYING: 'Destroying',
+            CVM_STATUS_NORMAL: 'Working',
+            CVM_STATUS_CREATING: 'Creating',
+        }
+        cluster = list_cvm()
         jobs = []
         if self.current_user:
             jobs = self.db.query(UserJob).filter(and_(UserJob.user_id == self.current_user['id'],
                                                       UserJob.job_type != 'upload'))\
                 .order_by(desc(UserJob.create_time)).limit(5).all()
 
-        self.render('index.html', jobs=jobs, title='Dashboard')
+        self.render('index.html', jobs=jobs, title='Dashboard', cluster=cluster, status_dict=status_dict)
 
 
 class LogoutHandler(BaseHandler):

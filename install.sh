@@ -6,6 +6,7 @@ cd ${WORKDIR}
 # install required software
 echo Install requirements ...
 apt-get -y update
+sleep 10
 apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
 
 # clone project

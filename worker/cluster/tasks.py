@@ -81,6 +81,7 @@ def install(ip_address):
                                                 % data)
         _, stdout, stderr = client.exec_command('curl -s %s | sudo bash' % CLOUDTREE_INSTALL_SCRIPT)
         print(stdout.read())
+        print(stderr.read())
         client.close()
     except Exception as e:
         print(e)
@@ -121,7 +122,7 @@ def create_cvm(count=1):
             if ret['Response']['InstanceIdSet'].index(i) == 0:
                 time.sleep(20)
 
-            install(cvm_info['wan_ip'])
+            install.delay(cvm_info['wan_ip'])
     else:
         raise Exception('Create failed: %s' % ret['Response']['Error']['Message'])
 
