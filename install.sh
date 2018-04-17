@@ -5,22 +5,29 @@ if [ ! -e ${WORKDIR} ]; then
 fi
 cd ${WORKDIR}
 
+# update source
 apt-get -y update
 
 # clone project
-echo Clone projects
+echo Clone projects ...
 git clone https://github.com/RicterZ/cloudtree
 cd cloudtree
+
+# download
+echo Download clustal-omega ...
+if [ ! -e clustal-omega-1.2.4.tar.gz ]; then
+    wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz
+    tar xvzf clustal-omega-1.2.4.tar.gz
+fi
+pushd clustal-omega-1.2.4
 
 # install required software
 echo Install requirements ...
 apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
+apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
 
 # install clustal omega
 echo Install Clustal Omega
-wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz
-tar xvzf clustal-omega-1.2.4.tar.gz
-pushd clustal-omega-1.2.4
 ./configure --with-pic --with-openmp
 make && make install
 popd
