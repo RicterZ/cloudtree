@@ -77,7 +77,7 @@ def install(ip_address):
 
         # write config file
         _, stdout, stderr = client.exec_command('sudo mkdir /root/cloudtree;'
-                                                'sudo bash -c "echo %s | base64 -d > /root/cloudtree/config.py'
+                                                'sudo bash -c "echo %s | base64 -d > /root/cloudtree/config.py"'
                                                 % data)
         _, stdout, stderr = client.exec_command('curl -s %s | sudo bash' % CLOUDTREE_INSTALL_SCRIPT)
         print(stdout.read())
