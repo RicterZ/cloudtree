@@ -17,4 +17,5 @@ echo Installing python libs ...
 pip install -r requirements.txt
 
 # start services
+chmod +x bin/celery_starter
 nohup bin/celery_starter &
