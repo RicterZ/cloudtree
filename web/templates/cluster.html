@@ -54,6 +54,18 @@
         return false;
     });
 
+    $(".reinstall").click(function () {
+        var ip = this.attributes['data-ip'].value;
+        $.ajax({
+            url: '/api/cluster/install/',
+            type: 'POST',
+            data: {"ip": ip}
+        }).done(function (res) {
+            alert("Re-install command has been sent");
+        });
+        return false;
+    })
+
 </script>
 {% endblock %}
 
@@ -66,6 +78,7 @@
             <th class="mdl-data-table__cell--non-numeric">Instance ID</th>
             <th class="mdl-data-table__cell--non-numeric">IP Address</th>
             <th class="mdl-data-table__cell--non-numeric">Status</th>
+            <th class="mdl-data-table__cell--non-numeric">Agent</th>
         </tr>
         </thead>
 
@@ -76,10 +89,11 @@
             <td class="mdl-data-table__cell--non-numeric" data-id="{{ s.instance_id }}">{{ s.instance_id }}</td>
             <td class="mdl-data-table__cell--non-numeric">{{ s.wan_ip }}</td>
             <td class="mdl-data-table__cell--non-numeric">{{ status_dict[s.status] }}</td>
+            <td class="mdl-data-table__cell--non-numeric"><button data-ip="{{ s.wan_ip }}" class="reinstall mdl-button mdl-js-button">Re-install</button></td>
         </tr>
         {% endfor %}
         {% else %}
-        <tr id="no-data"><td class="mdl-data-table__cell--non-numeric">No Data</td><td></td><td></td></tr>
+        <tr id="no-data"><td class="mdl-data-table__cell--non-numeric">No Data</td><td></td><td></td><td></td></tr>
         {% endif %}
         </tbody>
     </table>

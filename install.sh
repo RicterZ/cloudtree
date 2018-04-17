@@ -12,6 +12,15 @@ apt-get -y install gcc git python-pip libmysqld-dev mrbayes
 git clone https://github.com/RicterZ/cloudtree
 cd cloudtree
 
+# install clustal omega
+echo Install Clustal Omega
+wget http://www.clustal.org/omega/clustal-omega-1.2.4.tar.gz
+tar xvzf clustal-omega-1.2.4.tar.gz
+pushd clustal-omega-1.2.4
+./configure --with-pic --with-openmp
+make && make install
+popd
+
 # install python libs
 echo Installing python libs ...
 pip install -r requirements.txt

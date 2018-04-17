@@ -64,6 +64,27 @@ def list_cvm(instance_id=None):
 
 
 @app.task
+def install(ip_address):
+    if not ip_address:
+        return
+    try:
+        print('Connect to %s ...' % ip_address)
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(ip_address, 22, 'ubuntu', TENCENT_CLOUD_LOGIN_PASSWORD)
+        with open(os.path.join(os.path.dirname(__file__), '../config.py')) as f:
+            data = f.read().encode('base64').replace('\n', '')
+        _, stdout, stderr = client.exec_command('curl -s %s | sudo bash' % CLOUDTREE_INSTALL_SCRIPT)
+        print(stdout.read())
+        _, stdout, stderr = client.exec_command('echo %s | base64 -d > /root/cloudtree/'
+                                                'cloudtree/worker/config.py' % data)
+        _, stdout, stderr = client.exec_command('nohup /root/cloudtree/cloudtree/bin/celery_starter &')
+        client.close()
+    except Exception as e:
+        print(e)
+
+
+@app.task
 def create_cvm(count=1):
     if count <= 0:
         return
@@ -98,20 +119,7 @@ def create_cvm(count=1):
             if ret['Response']['InstanceIdSet'].index(i) == 0:
                 time.sleep(20)
 
-            try:
-                print('Connect to %s ...' % cvm_info['wan_ip'])
-                client = paramiko.SSHClient()
-                client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-                client.connect(cvm_info['wan_ip'], 22, 'ubuntu', TENCENT_CLOUD_LOGIN_PASSWORD)
-                with open(os.path.join(os.path.dirname(__file__), '../config.py')) as f:
-                    data = f.read().encode('base64').replace('\n', '')
-                _, stdout, stderr = client.exec_command('curl -s %s | sudo bash' % CLOUDTREE_INSTALL_SCRIPT)
-                _, stdout, stderr = client.exec_command('echo %s | base64 -d > /root/cloudtree/'
-                                                        'cloudtree/worker/config.py' % data)
-                _, stdout, stderr = client.exec_command('nohup /root/cloudtree/cloudtree/bin/celery_starter &')
-                client.close()
-            except Exception as e:
-                print(e)
+            install(cvm_info['wan_ip'])
     else:
         raise Exception('Create failed: %s' % ret['Response']['Error']['Message'])
 

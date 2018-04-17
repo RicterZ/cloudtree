@@ -10,7 +10,7 @@ from lib.utils import parse_fasta
 from worker import pipeline as task_pipeline
 from worker.tree.tasks import tree as task_tree
 from worker.align.tasks import align as task_align
-from worker.cluster.tasks import create_cvm, destroy_cvm
+from worker.cluster.tasks import create_cvm, destroy_cvm, install
 
 
 class ResultViewHandler(BaseHandler):
@@ -114,4 +114,12 @@ class ClusterHandler(BaseHandler):
     def delete(self):
         ids = tornado.escape.json_decode(self.request.body)
         destroy_cvm(ids)
+        return self.return_json(data={})
+
+
+class ClusterInstallHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        ip = self.get_argument('ip')
+        install.delay(ip)
         return self.return_json(data={})
