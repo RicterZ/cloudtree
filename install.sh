@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-PROJECT_DIR=$(pwd)
-TMP=/tmp/cloudtree
-mkdir ${TMP}
-cd ${TMP}
+WORKDIR=/root/cloudtree
+mkdir ${WORKDIR}
+cd ${WORKDIR}
 
 # install required software
 echo Install requirements ...
@@ -16,3 +15,6 @@ cd cloudtree
 # install python libs
 echo Installing python libs ...
 pip install -r requirements.txt
+
+# start services
+nohup bin/celery_starter &
