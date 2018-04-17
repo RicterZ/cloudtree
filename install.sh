@@ -6,7 +6,7 @@ cd ${WORKDIR}
 # install required software
 echo Install requirements ...
 apt-get -y update
-apt-get -y install gcc git python-pip libmysqld-dev mrbayes
+apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
 
 # clone project
 git clone https://github.com/RicterZ/cloudtree
