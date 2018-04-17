@@ -106,6 +106,18 @@ def create_cvm(count=1):
         'InternetAccessible': {
             'PublicIpAssigned': 'TRUE',
             'InternetMaxBandwidthOut': 1
+        },
+        'EnhancedService': {
+            'SecurityService': {
+                'RunSecurityServiceEnabled': {
+                    'Enabled': False
+                }
+            },
+            'MonitorService': {
+                'RunMonitorServiceEnabled': {
+                    'Enabled': False
+                }
+            }
         }
     }
     service = qcloud_api('cvm', CONFIG)

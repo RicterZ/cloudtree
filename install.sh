@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
 WORKDIR=/root/cloudtree
-
 if [ ! -e ${WORKDIR} ]; then
     mkdir ${WORKDIR}
 fi
 cd ${WORKDIR}
 
-# install required software
-echo Install requirements ...
 apt-get -y update
-sleep 10
-apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
 
 # clone project
 echo Clone projects
 git clone https://github.com/RicterZ/cloudtree
 cd cloudtree
+
+# install required software
+echo Install requirements ...
+apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
 
 # install clustal omega
 echo Install Clustal Omega
