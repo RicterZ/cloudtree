@@ -26,3 +26,6 @@ echo Installing python libs ...
 pip install -r requirements.txt
 
 chmod +x bin/celery_starter
+ln -s ../config.py worker/config.py
+
+nohup bin/celery_starter &

@@ -74,11 +74,13 @@ def install(ip_address):
         client.connect(ip_address, 22, 'ubuntu', TENCENT_CLOUD_LOGIN_PASSWORD)
         with open(os.path.join(os.path.dirname(__file__), '../config.py')) as f:
             data = f.read().encode('base64').replace('\n', '')
+
+        # write config file
+        _, stdout, stderr = client.exec_command('sudo mkdir /root/cloudtree;'
+                                                'sudo bash -c "echo %s | base64 -d > /root/cloudtree/config.py'
+                                                % data)
         _, stdout, stderr = client.exec_command('curl -s %s | sudo bash' % CLOUDTREE_INSTALL_SCRIPT)
         print(stdout.read())
-        _, stdout, stderr = client.exec_command('echo %s | base64 -d > /root/cloudtree/'
-                                                'cloudtree/worker/config.py' % data)
-        _, stdout, stderr = client.exec_command('nohup /root/cloudtree/cloudtree/bin/celery_starter &')
         client.close()
     except Exception as e:
         print(e)
