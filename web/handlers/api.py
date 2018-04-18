@@ -100,7 +100,7 @@ class PipelineHandler(BaseHandler):
                                   job_id=str(task), create_time=now(), job_meta='A&T Job'))
             self.db.commit()
 
-            return self.return_json(data=str(task))
+        return self.return_json(data=str(task))
 
 
 class ClusterHandler(BaseHandler):
