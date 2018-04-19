@@ -8,11 +8,6 @@ from worker.celery import app
 
 
 @app.task
-def ping():
-    return 'ok'
-
-
-@app.task
 def tree(seqs, seq_type='dna'):
     mega = os.path.join(os.path.dirname(__file__), 'vendor/megacc')
     tree_mao = os.path.join(os.path.dirname(__file__), 'templates/tree.mao')
