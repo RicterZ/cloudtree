@@ -23,8 +23,8 @@ pushd clustal-omega-1.2.4
 
 # install required software
 echo Install requirements ...
-apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
-apt-get -y install gcc git python-pip libmysqld-dev mrbayes libargtable2-dev
+apt-get -y install gcc git python-pip libmysqld-dev libargtable2-dev
+apt-get -y install gcc git python-pip libmysqld-dev libargtable2-dev
 
 # install clustal omega
 echo Install Clustal Omega

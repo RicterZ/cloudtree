@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 import os
 import tempfile
 import subprocess
+import glob
 
 from worker.celery import app
 
@@ -13,40 +14,31 @@ def ping():
 
 @app.task
 def tree(seqs, seq_type='dna'):
-    with open(os.path.join(os.path.dirname(__file__), 'templates/run.nex.template')) as f:
-        run_file_content = f.read()
+    mega = os.path.join(os.path.dirname(__file__), 'vendor/megacc')
+    tree_mao = os.path.join(os.path.dirname(__file__), 'templates/tree.mao')
+    with open(os.path.join(os.path.dirname(__file__), 'templates/meg.template')) as f:
+        meg_file_content = f.read()
 
-    with open(os.path.join(os.path.dirname(__file__), 'templates/data.nex.template')) as f:
-        data_file_content = f.read()
-
-    opts = {'seq_lines': '', 'seq_type': seq_type}
     for k, v in seqs.items():
-        opts['seq_lines'] += '{0}\t{1}\n'.format(k, v)
-        opts['seq_length'] = len(v)
-
-    opts['seq_count'] = len(seqs)
-
-    data_file_content = data_file_content.format(**opts)
+        meg_file_content += '#%s\n%s\n' % (k, v)
 
     temp_dir = tempfile.mktemp(prefix='cloudtree_')
     if not os.path.exists(temp_dir):
         os.mkdir(temp_dir)
 
-    run_file_path = os.path.join(temp_dir, 'run.nex')
-    data_file_path = os.path.join(temp_dir, 'data.nex')
+    meg_file_path = os.path.join(temp_dir, 'run.meg')
+    with open(meg_file_path, 'w') as f:
+        f.write(meg_file_content)
 
-    with open(run_file_path, 'w') as f:
-        f.write(run_file_content)
+    print('{} -d {} -a {} -o {}'.format(mega, meg_file_path, tree_mao, temp_dir))
+    subprocess.call('{} -d {} -a {} -o {}'.format(mega, meg_file_path, tree_mao, temp_dir), shell=True)
 
-    with open(data_file_path, 'w') as f:
-        f.write(data_file_content)
-
-    with open('{0}.stdout'.format(run_file_path), 'w') as out:
-        ret = subprocess.call('mpirun --allow-run-as-root -np {0} mb {1}'.format(2, run_file_path),
-                              shell=True, stdout=out, cwd=temp_dir)
+    nwk_file = glob.glob(os.path.join(temp_dir, '*.nwk'))
+    if not nwk_file:
+        raise Exception('nwk file not found')
 
     # save result
-    with open('{0}.con.tre'.format(run_file_path), 'r') as f:
+    with open(nwk_file[0], 'r') as f:
         result = f.read()
 
     return result

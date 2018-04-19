@@ -1,8 +1,0 @@
-#NEXUS
-BEGIN data;
-    dimensions ntax={seq_count} nchar={seq_length};
-    format datatype={seq_type} interleave=no gap=-;
-    matrix
-    {seq_lines}
-;
-END;
