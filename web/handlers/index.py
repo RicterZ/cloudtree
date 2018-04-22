@@ -1,7 +1,8 @@
 import os
+import time
 import tornado.web
+import hashlib
 
-from uuid import uuid4
 from sqlalchemy import and_, desc
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -71,7 +72,6 @@ class UploadFastAHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         upload_path = os.path.join(os.path.dirname(__file__), '../upload/')
-        upload_filename = str(uuid4())
 
         file_meta = self.request.files.get('file', None)
         if not file_meta:
@@ -82,15 +82,17 @@ class UploadFastAHandler(BaseHandler):
         if not file_meta['filename'].rsplit('.', 1)[1].lower() == 'fasta':
             return self.return_json(error='Only can upload .fasta file')
 
-        file_path = os.path.join(upload_path, '{0}.fasta'.format(upload_filename))
+        upload_filename = '{}-{}'.format(hashlib.md5(str(time.time())).hexdigest()[:6],
+                                         os.path.basename(file_meta['filename']))
+        file_path = os.path.join(upload_path, upload_filename)
         with open(file_path, 'wb') as f:
             f.write(file_meta['body'])
 
         self.db.merge(UserJob(user_id=self.current_user['id'], job_type='upload',
-                              job_meta='upload/{0}.fasta'.format(upload_filename), create_time=now()))
+                              job_meta='upload/{0}'.format(upload_filename), create_time=now()))
         self.db.commit()
 
-        return self.return_json(data='upload/{0}.fasta'.format(upload_filename))
+        return self.return_json(data='upload/{0}'.format(upload_filename))
 
 
 class CreateTaskHandler(BaseHandler):

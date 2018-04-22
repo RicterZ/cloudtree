@@ -7,10 +7,24 @@ import glob
 from worker.celery import app
 
 
+methods = {
+    'Maximum-Likelihood': 'ML.mao',
+    'Neighbor-Joining': 'NJ.mao',
+    'Minimum-Evolution': 'ME.mao',
+    'Maximum-Parsimony': 'MP.mao',
+    'UPGMA': 'UPGMA.mao',
+}
+
+
 @app.task
-def tree(seqs, seq_type='dna'):
+def tree(seqs, seq_type='dna', method='Neighbor-Joining'):
+    if method in methods:
+        mao_file = methods[method]
+    else:
+        mao_file = 'NJ.mao'
+
     mega = os.path.join(os.path.dirname(__file__), 'vendor/megacc')
-    tree_mao = os.path.join(os.path.dirname(__file__), 'templates/tree.mao')
+    tree_mao = os.path.join(os.path.dirname(__file__), 'templates/{}'.format(mao_file))
     with open(os.path.join(os.path.dirname(__file__), 'templates/meg.template')) as f:
         meg_file_content = f.read()
 
