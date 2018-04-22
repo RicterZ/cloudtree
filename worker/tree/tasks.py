@@ -15,16 +15,28 @@ methods = {
     'UPGMA': 'UPGMA.mao',
 }
 
+seq_map = {
+    'Nucleotide alignment (non-coding)': 'nc',
+    'Nucleotide alignment (coding)': 'c',
+    'Protein alignment (amino acid)': 'aa',
+}
+
 
 @app.task
-def tree(seqs, seq_type='dna', method='Neighbor-Joining'):
+def tree(seqs, seq_type='Nucleotide alignment (non-coding)', method='Neighbor-Joining'):
     if method in methods:
         mao_file = methods[method]
     else:
         mao_file = 'NJ.mao'
 
+    if seq_type in seq_map:
+        seq = seq_map[seq_type]
+    else:
+        seq = 'nc'
+
+    print('Use mao file: maos/{}/{}'.format(seq, mao_file))
     mega = os.path.join(os.path.dirname(__file__), 'vendor/megacc')
-    tree_mao = os.path.join(os.path.dirname(__file__), 'templates/{}'.format(mao_file))
+    tree_mao = os.path.join(os.path.dirname(__file__), 'maos/{}/{}'.format(seq, mao_file))
     with open(os.path.join(os.path.dirname(__file__), 'templates/meg.template')) as f:
         meg_file_content = f.read()
 

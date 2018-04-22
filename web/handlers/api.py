@@ -82,7 +82,10 @@ class CreateAlignHandler(BaseHandler):
 class PipelineHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
-        files = tornado.escape.json_decode(self.request.body)
+        data = tornado.escape.json_decode(self.request.body)
+        files = data.get('files', [])
+        settings = data.get('settings', {})
+
         for file_path in files:
             file_real_path = os.path.join(os.path.dirname(__file__), '../{0}'.format(file_path))
             if '..' in file_path or not file_path.startswith('upload/') or not file_path.endswith('.fasta') or \
@@ -95,7 +98,8 @@ class PipelineHandler(BaseHandler):
                 print(e)
                 continue
 
-            task = task_pipeline.delay(seq_dict=ret)
+            task = task_pipeline.delay(seq_dict=ret, seq_type=settings.get('seq', None),
+                                       method=settings.get('method', None))
             self.db.merge(UserJob(user_id=self.current_user['id'], job_type='pipeline',
                                   job_id=str(task), create_time=now(), job_meta='A&T Job'))
             self.db.commit()

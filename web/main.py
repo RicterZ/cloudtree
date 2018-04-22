@@ -31,7 +31,9 @@ def main():
 
         # static
         (r'/upload/(.*)', tornado.web.StaticFileHandler,
-         {'path': os.path.join(os.path.dirname(__file__), 'upload/')})
+            {'path': os.path.join(os.path.dirname(__file__), 'upload/')}),
+        (r'/(docs\.html)', tornado.web.StaticFileHandler,
+            {'path': os.path.join(os.path.dirname(__file__), 'templates/')}),
 
     ], debug=True,
         static_path=os.path.join(os.path.dirname(__file__), 'static'),
