@@ -16,8 +16,8 @@ Analysis                                 = Phylogeny Reconstruction
 Scope                                    = All Selected Taxa                       
 Statistical Method                       = Neighbor-joining                        
 Phylogeny Test                           = Not Applicable                          
-Test of Phylogeny                        = None                                    
-No. of Bootstrap Replications            = Not Applicable                          
+Test of Phylogeny                    = Bootstrap method
+No. of Bootstrap Replications        = {BOOTSTRAP_NUM}
 Substitution Model                       = ====================                    
 Substitutions Type                       = Nucleotide                              
 Model/Method                             = No. of differences                      

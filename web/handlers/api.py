@@ -99,7 +99,8 @@ class PipelineHandler(BaseHandler):
                 continue
 
             task = task_pipeline.delay(seq_dict=ret, seq_type=settings.get('seq', None),
-                                       method=settings.get('method', None))
+                                       method=settings.get('method', None),
+                                       bootstrap=settings.get('bootstrap', 500))
             self.db.merge(UserJob(user_id=self.current_user['id'], job_type='pipeline',
                                   job_id=str(task), create_time=now(), job_meta='A&T Job'))
             self.db.commit()

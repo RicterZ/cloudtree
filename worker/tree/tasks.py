@@ -23,7 +23,7 @@ seq_map = {
 
 
 @app.task
-def tree(seqs, seq_type='Nucleotide alignment (non-coding)', method='Neighbor-Joining'):
+def tree(seqs, seq_type='Nucleotide alignment (non-coding)', method='Neighbor-Joining', bootstrap=500):
     if method in methods:
         mao_file = methods[method]
     else:
@@ -34,9 +34,19 @@ def tree(seqs, seq_type='Nucleotide alignment (non-coding)', method='Neighbor-Jo
     else:
         seq = 'nc'
 
+    if not str(bootstrap).isdigit():
+        bootstrap = '500'
+    else:
+        bootstrap = str(bootstrap)
+
     print('Use mao file: maos/{}/{}'.format(seq, mao_file))
     mega = os.path.join(os.path.dirname(__file__), 'vendor/megacc')
     tree_mao = os.path.join(os.path.dirname(__file__), 'maos/{}/{}'.format(seq, mao_file))
+
+    with open(tree_mao, 'r') as f:
+        data = f.read()
+        mao_data = data.format(BOOTSTRAP_NUM=bootstrap)
+
     with open(os.path.join(os.path.dirname(__file__), 'templates/meg.template')) as f:
         meg_file_content = f.read()
 
@@ -46,6 +56,10 @@ def tree(seqs, seq_type='Nucleotide alignment (non-coding)', method='Neighbor-Jo
     temp_dir = tempfile.mktemp(prefix='cloudtree_')
     if not os.path.exists(temp_dir):
         os.mkdir(temp_dir)
+
+    tree_mao = os.path.join(temp_dir, 'config.mao')
+    with open(tree_mao, 'w') as f:
+        f.write(mao_data)
 
     meg_file_path = os.path.join(temp_dir, 'run.meg')
     with open(meg_file_path, 'w') as f:

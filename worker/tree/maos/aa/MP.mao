@@ -14,8 +14,8 @@ ppMP                                        = true
 Analysis                                    = Phylogeny Reconstruction                   
 Statistical Method                          = Maximum Parsimony                          
 Phylogeny Test                              = ====================                       
-Test of Phylogeny                           = None                                       
-No. of Bootstrap Replications               = Not Applicable                             
+Test of Phylogeny                           = Bootstrap method
+No. of Bootstrap Replications               = {BOOTSTRAP_NUM}
 Substitution Model                          = ====================                       
 Substitutions Type                          = Amino acid                                 
 Data Subset to Use                          = ====================                       
