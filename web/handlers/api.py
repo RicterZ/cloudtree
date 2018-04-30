@@ -85,6 +85,7 @@ class PipelineHandler(BaseHandler):
         data = tornado.escape.json_decode(self.request.body)
         files = data.get('files', [])
         settings = data.get('settings', {})
+        results = []
 
         for file_path in files:
             file_real_path = os.path.join(os.path.dirname(__file__), '../{0}'.format(file_path))
@@ -104,8 +105,9 @@ class PipelineHandler(BaseHandler):
             self.db.merge(UserJob(user_id=self.current_user['id'], job_type='pipeline',
                                   job_id=str(task), create_time=now(), job_meta='A&T Job'))
             self.db.commit()
+            results.append(str(task))
 
-        return self.return_json(data=str(task))
+        return self.return_json(data=results)
 
 
 class ClusterHandler(BaseHandler):
