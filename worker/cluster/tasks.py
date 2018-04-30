@@ -76,12 +76,12 @@ def install(ip_address):
             data = f.read().encode('base64').replace('\n', '')
 
         # write config file
+        print('Writing config file ...')
         _, stdout, stderr = client.exec_command('sudo mkdir /root/cloudtree;'
                                                 'sudo bash -c "echo %s | base64 -d > /root/cloudtree/config.py"'
                                                 % data)
+        print('Running install script ...')
         _, stdout, stderr = client.exec_command('curl -s %s | sudo bash' % CLOUDTREE_INSTALL_SCRIPT)
-        print(stdout.read())
-        print(stderr.read())
         client.close()
     except Exception as e:
         print(e)
