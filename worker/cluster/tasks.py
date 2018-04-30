@@ -82,8 +82,10 @@ def install(ip_address):
                                                 % data)
         print('Running install script ...')
         _, stdout, stderr = client.exec_command('curl -o /tmp/install.sh %s; chmod +x /tmp/install.sh;'
-                                                'tmux new-session -d "sudo /tmp/install.sh"' %
+                                                'tmux new-session -d "sudo /tmp/install.sh > /tmp/output.log"' %
                                                 CLOUDTREE_INSTALL_SCRIPT)
+        print(stdout.read())
+        print(stderr.read())
         client.close()
     except Exception as e:
         print(e)
