@@ -40,4 +40,4 @@ chmod +x bin/celery_starter
 chmod +x worker/tree/vendor/megacc
 ln -s ${WORKDIR}/config.py worker/config.py
 
-nohup bin/celery_starter &
+bin/celery_starter
