@@ -81,9 +81,9 @@ def install(ip_address):
                                                 'sudo bash -c "echo %s | base64 -d > /root/cloudtree/config.py"'
                                                 % data)
         print('Running install script ...')
-        _, stdout, stderr = client.exec_command('curl -o /tmp/install.sh %s; chmod +x /tmp/install.sh' %
+        _, stdout, stderr = client.exec_command('curl -o /tmp/install.sh %s; chmod +x /tmp/install.sh;'
+                                                'tmux new-session -d "sudo /tmp/install.sh"' %
                                                 CLOUDTREE_INSTALL_SCRIPT)
-        _, stdout, stderr = client.exec_command('tmux new-session -d "sudo /tmp/install.sh"')
         client.close()
     except Exception as e:
         print(e)
