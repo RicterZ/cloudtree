@@ -67,6 +67,9 @@ class BaseHandler(tornado.web.RequestHandler, JinjaTemplateMixin):
         self.db = scoped_session(sessionmaker(bind=engine))
         super(BaseHandler, self).__init__(application, request, **kwargs)
 
+    def on_finish(self):
+        self.db.remove()
+
     def query(self, type_, uuid):
         result = self.db.query(UserJob).filter(and_(UserJob.job_id == uuid,
                                                     UserJob.job_type == type_)).all()
