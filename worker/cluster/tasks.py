@@ -102,7 +102,7 @@ def create_cvm(count=1, type_='S2.SMALL1'):
     params = {
         'Version': '2017-03-12',
         'Placement': {
-            'Zone': TENCENT_CLOUD_REGION + '-2',
+            'Zone': TENCENT_CLOUD_REGION + '-3',
         },
         'ImageId': UBUNTU_16_04,
         'LoginSettings': {
