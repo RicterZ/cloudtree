@@ -119,7 +119,7 @@ def create_cvm(count=1):
                 'Enabled': False
             }
         },
-        'InstanceType': 'CDH_2C2G',
+        'InstanceType': 'S1.MEDIUM2',
     }
     service = qcloud_api('cvm', CONFIG)
     ret = service.call('RunInstances', params)
