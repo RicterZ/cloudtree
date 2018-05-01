@@ -96,7 +96,7 @@ def create_cvm(count=1, type_='S2.SMALL1'):
     if count <= 0:
         return
 
-    if type_ not in ('S2.SMALL1', 'C2.LARGE8'):
+    if type_ not in ('S2.SMALL1', 'S2.MEDIUM2', 'S2.LARGE8'):
         type_ = 'S2.SMALL1'
 
     params = {

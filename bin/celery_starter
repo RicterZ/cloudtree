@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-celery -A worker.celery worker --concurrency 4 -l info -n `hostname`
+celery -A worker.celery worker --concurrency $(cat /proc/cpuinfo | grep processor | wc -l) -l info -n `hostname`
