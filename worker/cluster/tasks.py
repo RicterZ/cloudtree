@@ -123,6 +123,9 @@ def create_cvm(count=1, type_='S2.SMALL1'):
             }
         },
         'InstanceType': type_,
+        'SystemDisk': {
+            'DiskType': 'CLOUD_BASIC'
+        },
     }
     service = qcloud_api('cvm', CONFIG)
     ret = service.call('RunInstances', params)
@@ -140,6 +143,7 @@ def create_cvm(count=1, type_='S2.SMALL1'):
 
             install.delay(cvm_info['wan_ip'])
     else:
+        print(ret)
         raise Exception('Create failed: %s' % ret['Response']['Error']['Message'])
 
 
