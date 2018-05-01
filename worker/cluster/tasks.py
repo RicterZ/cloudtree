@@ -92,9 +92,12 @@ def install(ip_address):
 
 
 @app.task
-def create_cvm(count=1):
+def create_cvm(count=1, type_='S2.SMALL1'):
     if count <= 0:
         return
+
+    if type_ not in ('S2.SMALL1', 'C2.LARGE8'):
+        type_ = 'S2.SMALL1'
 
     params = {
         'Version': '2017-03-12',
@@ -119,7 +122,7 @@ def create_cvm(count=1):
                 'Enabled': False
             }
         },
-        'InstanceType': 'S1.MEDIUM2',
+        'InstanceType': type_,
     }
     service = qcloud_api('cvm', CONFIG)
     ret = service.call('RunInstances', params)

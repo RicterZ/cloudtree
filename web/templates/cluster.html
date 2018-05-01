@@ -44,10 +44,11 @@
 
     $("#create").click(function () {
         var count = $("#sample3").val();
+        var type = $("#sample4").val();
         $.ajax({
             url: '/api/cluster/',
             type: 'POST',
-            data: {"count": count}
+            data: {"count": count, "type": type}
         }).done(function (res) {
             setTimeout("location.reload()", 2000);
         });
@@ -110,8 +111,13 @@
                     <input class="mdl-textfield__input" type="text" name="user" id="sample3">
                     <label class="mdl-textfield__label" for="sample3">Count...</label>
                 </div>
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" name="type" id="sample4" value="S2.SMALL1">
+                    <label class="mdl-textfield__label" for="sample4">Type...</label>
+                </div>
             </form>
             Input the count of cloud server of cluster to create, then CloudTree will create the CVM and install agent automatically.
+            CVM Type: S2.SMALL1, C2.LARGE8
         </div>
         <div class="mdl-card__actions mdl-card--border">
             <button type="submit" id="create" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Create</button>

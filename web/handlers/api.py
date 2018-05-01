@@ -114,7 +114,8 @@ class ClusterHandler(BaseHandler):
     @tornado.web.authenticated
     def post(self):
         count = self.get_argument('count')
-        create_cvm.delay(count)
+        type_ = self.get_argument('type', 'S2.SMALL1')
+        create_cvm.delay(count, type_)
         return self.return_json(data={})
 
     @tornado.web.authenticated
