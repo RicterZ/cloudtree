@@ -118,7 +118,8 @@ def create_cvm(count=1):
             'MonitorService': {
                 'Enabled': False
             }
-        }
+        },
+        'InstanceType': 'CDH_2C2G',
     }
     service = qcloud_api('cvm', CONFIG)
     ret = service.call('RunInstances', params)
